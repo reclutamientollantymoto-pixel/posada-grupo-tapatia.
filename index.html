@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Posada Mexicana | Grupo Tapatía</title>
+<style>
+:root{--green:#174b38;--red:#9b302b;--gold:#e9bd59;--cream:#fff6df}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#28664c,#102f25 72%);font-family:Arial,sans-serif;color:#fff;text-align:center;padding:22px 14px}
+main{max-width:520px;margin:auto}.brand{font-size:12px;letter-spacing:3px;color:#ffe4a1;font-weight:bold;margin:10px}
+h1{font-family:Georgia,serif;font-size:clamp(28px,7vw,42px);line-height:1.1;margin:12px 0;color:#fff3d5}
+.intro{font-size:16px;line-height:1.5;color:#ffefd0}
+.panel{background:rgba(255,255,255,.09);border:1px solid rgba(255,230,170,.35);border-radius:22px;padding:20px;margin:18px 0;box-shadow:0 15px 40px #071b1580}
+input{width:100%;padding:14px;border-radius:12px;border:1px solid #d7bd80;font-size:16px;margin:8px 0 14px}
+button{border:0;border-radius:30px;padding:13px 22px;font-size:16px;font-weight:bold;background:var(--gold);color:#492b16;cursor:pointer}
+.pinata{font-size:clamp(100px,27vw,145px);line-height:1.35;display:block;margin:5px auto;cursor:pointer;filter:drop-shadow(0 8px 5px #071b1580);transition:transform .18s}
+.pinata:active{transform:rotate(-18deg) scale(.9)}
+.hidden{display:none!important}
+.invite{background:var(--cream);color:#244332;border:3px double #c59a42;border-radius:18px;padding:25px 18px;margin-top:18px}
+.invite h2{font: bold 30px Georgia,serif;color:var(--red);margin:8px 0}
+.name{font: bold 22px Georgia,serif;color:#24513b;margin:12px 0}
+.detail{background:white;border-radius:12px;padding:12px;margin:10px 0;line-height:1.5}
+.label{font-size:11px;letter-spacing:2px;color:#9b7029;font-weight:bold}
+.footer{font: bold 20px Georgia,serif;color:var(--red);margin-top:16px}
+.small{font-size:12px;color:#fff0cf;line-height:1.5}
+#confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.piece{position:absolute;top:-25px;font-size:22px;animation:drop 2.3s ease-in forwards}
+@keyframes drop{to{transform:translateY(110vh) rotate(650deg);opacity:0}}
+a{color:#fff0bf}
+</style>
+</head>
+<body>
+<div id="confetti"></div>
+<main>
+  <div class="brand">GRUPO TAPATÍA</div>
+  <h1>¡Una sorpresa<br>muy mexicana te espera!</h1>
+  <p class="intro">Escribe tu nombre y prepárate para descubrir tu invitación.<br>¡Hay que romper la piñata!</p>
+  <section class="panel" id="start">
+    <label for="guest">¿A quién vamos a invitar?</label>
+    <input id="guest" maxlength="70" autocomplete="name" placeholder="Escribe tu nombre">
+    <button id="begin">Continuar</button>
+  </section>
+  <section class="panel hidden" id="game">
+    <p id="hello" class="intro"></p>
+    <div class="pinata" id="pinata" role="button" tabindex="0" aria-label="Romper la piñata">🪅</div>
+    <p class="intro">Toca la piñata para romperla y descubrir tu sorpresa.</p>
+    <button id="hit">¡ROMPER LA PIÑATA!</button>
+  </section>
+  <section class="invite hidden" id="invite">
+    <div style="font-size:36px">🎊 🎄 🎁</div>
+    <div class="label">INVITACIÓN ESPECIAL PARA</div>
+    <div class="name" id="guestName"></div>
+    <h2>¡POSADA MEXICANA!</h2>
+    <p>Será un gusto compartir contigo una tarde de alegría, convivencia y celebración.</p>
+    <div class="detail"><div class="label">FECHA</div><strong>5 de diciembre de 2026</strong></div>
+    <div class="detail"><div class="label">HORA</div><strong>14:00 horas</strong></div>
+    <div class="detail"><div class="label">LUGAR</div><strong>Terraza Meraki</strong><br>Av. Perif. Pte. Manuel Gómez Morin 160,<br>La Duraznera, San Pedro Tlaquepaque</div>
+    <div class="footer">¡Te esperamos!</div>
+    <div class="label" style="margin-top:12px">GRUPO TAPATÍA</div>
+  </section>
+  <p class="small">Una celebración para compartir lo que construimos juntos.<br>🎄 ¡Felices fiestas! 🎄</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let guest='';
+function start(){
+ guest=$('guest').value.trim();
+ if(!guest){$('guest').focus();return}
+ $('start').classList.add('hidden');$('game').classList.remove('hidden');
+ $('hello').textContent='¡Hola, '+guest+'! Esta piñata es para ti.';
+}
+function breakPinata(){
+ if($('invite').classList.contains('hidden')===false)return;
+ $('pinata').textContent='💥';
+ $('hit').classList.add('hidden');
+ const icons=['🍬','⭐','🎊','🎉','✨','🍭'];
+ for(let i=0;i<42;i++){
+  const p=document.createElement('span');p.className='piece';p.textContent=icons[Math.floor(Math.random()*icons.length)];
+  p.style.left=Math.random()*100+'vw';p.style.animationDelay=(Math.random()*.7)+'s';
+  $('confetti').appendChild(p);setTimeout(()=>p.remove(),3300);
+ }
+ $('guestName').textContent=guest;
+ setTimeout(()=>$('invite').classList.remove('hidden'),550);
+}
+$('begin').addEventListener('click',start);
+$('guest').addEventListener('keydown',e=>{if(e.key==='Enter')start()});
+$('hit').addEventListener('click',breakPinata);
+$('pinata').addEventListener('click',breakPinata);
+$('pinata').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();breakPinata()}});
+// Personalization by URL: ?nombre=Alejandro
+const params=new URLSearchParams(location.search), fromUrl=params.get('nombre');
+if(fromUrl){$('guest').value=fromUrl}
+</script>
+</body>
+</html>
